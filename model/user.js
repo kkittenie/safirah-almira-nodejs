@@ -1,8 +1,24 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const User = mongoose.model('user', {
   username: String,
-  password: String
+  password: String,
 });
 
-module.exports = mongoose.model('User', UserSchema, 'user');
+async function createDefaultAdmin() {
+    const admin = await User.findOne({ username: 'admin' });
+
+    if (!admin) {
+        await User.create({
+            username: 'admin',
+            password: 'admin',
+        });
+        console.log('Default admin user created');
+    } else {
+        console.log('Admin already exists');
+    }
+}
+ 
+createDefaultAdmin();
+
+module.exports = User;
